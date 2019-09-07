@@ -1,10 +1,8 @@
 package net.stedin.werkorderservice.rest;
 
-import static net.stedin.werkorderservice.domain.WerkorderStatus.INACTIEF;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import net.stedin.werkorderservice.domain.Werkorder;
+import net.stedin.werkorderservice.exceptions.WerkorderNotFoundException;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -14,10 +12,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
-import net.stedin.werkorderservice.domain.Werkorder;
-import net.stedin.werkorderservice.exceptions.WerkorderNotFoundException;
+import static net.stedin.werkorderservice.domain.WerkorderStatus.INACTIEF;
 
 @Slf4j
 @Path("/werkorders")
@@ -51,6 +50,6 @@ public class WerkorderService {
 
     @DELETE
     public void delete(Long id) {
-        werkorders.removeIf(wo -> wo.getId() == id);
+        werkorders.removeIf(wo -> wo.getId().equals(id));
     }
 }
