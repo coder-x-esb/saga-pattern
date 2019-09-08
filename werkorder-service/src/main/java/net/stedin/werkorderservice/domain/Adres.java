@@ -1,24 +1,23 @@
 
 package net.stedin.werkorderservice.domain;
 
-import lombok.Data;
-
+import javax.persistence.Embeddable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
-@Data
+@Embeddable
 public class Adres {
 
     @NotEmpty
     @Pattern(regexp = "[0-9]{4}\\s?[aA-zZ]{2}")
-    private String postcode;
+    public String postcode;
 
     @NotEmpty
-    private String huisNr;
+    public String huisNr;
 
     @NotEmpty
-    private String straat;
+    public String straat;
 
     @NotEmpty
-    private String woonplaats;
+    public String woonplaats;
 }
