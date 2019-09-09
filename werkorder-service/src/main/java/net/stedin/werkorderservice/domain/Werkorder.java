@@ -15,8 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import java.time.LocalDate;
 
-@ToString
 @Entity
+@ToString
 public class Werkorder extends PanacheEntityBase {
 
     @Id
