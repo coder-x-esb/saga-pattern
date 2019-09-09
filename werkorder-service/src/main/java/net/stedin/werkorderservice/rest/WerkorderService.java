@@ -1,7 +1,8 @@
 package net.stedin.werkorderservice.rest;
 
-import lombok.extern.slf4j.Slf4j;
 import net.stedin.werkorderservice.domain.Werkorder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -17,11 +18,12 @@ import java.util.List;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static net.stedin.werkorderservice.domain.WerkorderStatus.INACTIEF;
 
-@Slf4j
 @Path("/werkorders")
 @Produces(APPLICATION_JSON)
 @Consumes(APPLICATION_JSON)
 public class WerkorderService {
+
+    static final Logger log = LoggerFactory.getLogger(WerkorderService.class);
 
     @GET
     public List<Werkorder> findAll() {
@@ -40,11 +42,13 @@ public class WerkorderService {
         wo.aanmaakDatum = LocalDate.now();
         wo.status = INACTIEF;
         Werkorder.persist(wo);
-        this.log.debug("new wo added:\n" + wo);
+        log.debug("new wo added:\n" + wo);
     }
 
     @DELETE
-    public void delete(Long id) {
+    @Path("/{id}")
+    @Transactional
+    public void delete(@PathParam("id") Long id) {
         Werkorder.delete("id = ?1", id);
     }
 }
