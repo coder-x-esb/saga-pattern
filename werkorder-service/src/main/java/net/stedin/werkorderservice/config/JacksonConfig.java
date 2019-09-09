@@ -19,8 +19,8 @@ import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS
 @ApplicationScoped
 public class JacksonConfig {
 
-    @Singleton
     @Produces
+    @Singleton
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(WRITE_DATES_AS_TIMESTAMPS);

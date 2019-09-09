@@ -3,6 +3,7 @@ package net.stedin.werkorderservice.rest;
 import lombok.extern.slf4j.Slf4j;
 import net.stedin.werkorderservice.domain.Werkorder;
 
+import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -34,9 +35,10 @@ public class WerkorderService {
     }
 
     @POST
+    @Transactional
     public void save(Werkorder wo) {
-        wo.setAanmaakDatum(LocalDate.now());
-        wo.setStatus(INACTIEF);
+        wo.aanmaakDatum = LocalDate.now();
+        wo.status = INACTIEF;
         Werkorder.persist(wo);
         this.log.debug("new wo added:\n" + wo);
     }
