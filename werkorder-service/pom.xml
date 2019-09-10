@@ -63,7 +63,8 @@
         <groupId>io.opentracing.contrib</groupId>
         <artifactId>opentracing-jdbc</artifactId>
         <version>0.0.12</version>
-    </dependency>    <dependency>
+    </dependency>
+    <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>1.18.8</version>
