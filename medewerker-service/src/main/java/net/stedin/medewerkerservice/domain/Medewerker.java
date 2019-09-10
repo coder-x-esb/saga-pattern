@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
@@ -16,10 +18,17 @@ import java.time.LocalDate;
 @Builder
 public class Medewerker {
     private Long id;
+
+    @NotBlank
     private String voornaam;
+
+    @NotBlank
     private String achternaam;
+
+    @NotNull
     private Functie functie;
 
+    @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)

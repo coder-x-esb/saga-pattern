@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -33,6 +33,7 @@ public class MedewerkerService {
     static {
         medewerkers.add(
             Medewerker.builder()
+                .id(1L)
                 .voornaam("Alvin")
                 .achternaam("Kwekel")
                 .functie(Functie.MONTEUR)
@@ -70,18 +71,17 @@ public class MedewerkerService {
         this.log.debug("new medewerker added:\n" + medewerker);
     }
 
-    @PUT
+    @PATCH
     @Path("/{id}")
     public void update(@PathParam("id") Long id, Medewerker medewerkerUpdate) {
         double i = ThreadLocalRandom.current().nextDouble();
         if (i >= 0.4) {
-            Medewerker storedMedewerker = medewerkers.stream()
-                .filter(m -> m.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new MedewerkerNotFoundException());
+            Medewerker storedMedewerker = find(id);
+            storedMedewerker.setFunctie(medewerkerUpdate.getFunctie());
+            storedMedewerker.setGereserveerdOp(medewerkerUpdate.getGereserveerdOp());
+            storedMedewerker.setGeboorteDatum(medewerkerUpdate.getGeboorteDatum());
             medewerkers.set(medewerkers.indexOf(storedMedewerker), medewerkerUpdate);
-            medewerkers.add(medewerkerUpdate);
-            log.debug("new medewerker added:\n" + medewerkerUpdate);
+            log.debug("Medewerker(id={}) updated:\n" + storedMedewerker);
         } else {
             throw new MedewerkerIsNotAvailableException();
         }
