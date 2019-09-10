@@ -6,13 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @CamelOpenTracing
 @SpringBootApplication
-public class MySpringBootApplication {
+public class CamelSagaApp {
 
-    /**
-     * A main method to start this application.
-     */
     public static void main(String[] args) {
-        SpringApplication.run(MySpringBootApplication.class, args);
+        SpringApplication.run(CamelSagaApp.class, args);
     }
 
 }
