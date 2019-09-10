@@ -1,8 +1,10 @@
 package net.stedin.demo.saga.orchestrator;
 
+import org.apache.camel.opentracing.starter.CamelOpenTracing;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@CamelOpenTracing
 @SpringBootApplication
 public class MySpringBootApplication {
 
