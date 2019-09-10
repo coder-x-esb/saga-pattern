@@ -1,6 +1,7 @@
 package net.stedin.werkorderservice.rest;
 
 import net.stedin.werkorderservice.domain.Werkorder;
+import net.stedin.werkorderservice.exceptions.WerkorderNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +15,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static net.stedin.werkorderservice.domain.WerkorderStatus.INACTIEF;
@@ -33,7 +35,7 @@ public class WerkorderService {
     @GET
     @Path("/{id}")
     public Werkorder find(@PathParam("id") Long id) {
-        return Werkorder.findById(id);
+        return (Werkorder) Optional.ofNullable(Werkorder.findById(id)).orElseThrow(() -> new WerkorderNotFoundException());
     }
 
     @POST
