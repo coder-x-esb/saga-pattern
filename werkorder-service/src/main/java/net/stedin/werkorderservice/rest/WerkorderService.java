@@ -2,6 +2,7 @@ package net.stedin.werkorderservice.rest;
 
 import net.stedin.werkorderservice.domain.Werkorder;
 import net.stedin.werkorderservice.exceptions.WerkorderNotFoundException;
+import net.stedin.werkorderservice.exceptions.WerkorderServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,7 @@ import javax.ws.rs.Produces;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static net.stedin.werkorderservice.domain.WerkorderStatus.INACTIEF;
@@ -40,11 +42,17 @@ public class WerkorderService {
 
     @POST
     @Transactional
-    public void save(Werkorder wo) {
-        wo.aanmaakDatum = LocalDate.now();
-        wo.status = INACTIEF;
-        Werkorder.persist(wo);
-        log.debug("new wo added:\n" + wo);
+    public Werkorder save(Werkorder wo) {
+        double i = ThreadLocalRandom.current().nextDouble();
+        if (i >= 0.15) {
+            wo.aanmaakDatum = LocalDate.now();
+            wo.status = INACTIEF;
+            Werkorder.persist(wo);
+            log.debug("new wo added:\n" + wo);
+            return wo;
+        } else {
+            throw new WerkorderServiceException("Werkorder could not be saved");
+        }
     }
 
     @DELETE
