@@ -71,7 +71,11 @@
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-jackson</artifactId>
+      <artifactId>camel-jackson-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-http4-starter</artifactId>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>

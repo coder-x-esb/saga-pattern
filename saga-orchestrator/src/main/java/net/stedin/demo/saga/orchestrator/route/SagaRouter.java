@@ -28,8 +28,8 @@ public class SagaRouter extends RouteBuilder {
                 .routeId("aanmakenEnPlannenWerkorder")
                 .errorHandler(noErrorHandler())
                 .unmarshal().json(JsonLibrary.Jackson, SaveAndPlanWerkorder.class)
+                .setHeader("medewerkerId", simple("${body.medewerkerId}"))
                 .process(e -> e.getIn().setHeader("id", UUID.randomUUID().toString()))
-                .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .log("Uitvoeren saga ${header.id}")
                 /*.process(e -> e.getIn().setBody(SaveAndPlanWerkorder.builder()
                         .medewerkerId(1L)
@@ -54,7 +54,7 @@ public class SagaRouter extends RouteBuilder {
                     .option("id", header("id"))
                     .compensation("direct:annuleerWerkorder")
                 .choice()
-                    .when(x -> Math.random() >= 0.75)
+                    .when(x -> Math.random() >= 0.85)
                         .throwException(new RuntimeException("Aanmaken werkorder gefaald"))
                     .otherwise()
                         .log("Werkorder ${header.id} aangemaakt")
@@ -67,16 +67,18 @@ public class SagaRouter extends RouteBuilder {
                 .saga()
                     .propagation(SagaPropagation.MANDATORY)
                     .option("id", header("id"))
+                    .option("medewerkerId", header("medewerkerId"))
                     .compensation("direct:vrijgevenMedewerker")
-                .choice()
-                    .when(x -> Math.random() >= 0.75)
-                        .throwException(new RuntimeException("Medewerker reserveren gefaald"))
-                    .otherwise()
-                        .log("Medewerker ${header.id} gereserveerd")
-                        .setBody(constant("{\"id\":1,\"voornaam\":\"Alvin\",\"achternaam\":\"Kwekel\",\"geboorteDatum\":\"10-09-2019\",\"functie\":\"MONTEUR\",\"gereserveerdOp\":\"10-09-2019\"}"))
-                        /*.to("http4://localhost:9081/medewerkers/${body.medewerkerId}/reserveer?datum=${body.datum.toString()}")*/;
+                .setHeader("reserveeringsDatum", method(Transformations.class, "transformDate(${body.datum})"))
+                .setBody(constant(null))
+                .toD("http4://localhost:9081/medewerkers/${header.medewerkerId}/reserveer?datum=${header.reserveeringsDatum}" +
+                        "&httpMethod=POST&bridgeEndpoint=true")
+                .log("Medewerker ${header.medewerkerId} gereserveerd");
         from("direct:vrijgevenMedewerker").routeId("vrijgevenMedewerker")
-                .log("Medewerker ${header.id} vrijgegeven");
+                .setBody(constant(null))
+                .toD("http4://localhost:9081/medewerkers/${header.medewerkerId}/vrijgeven" +
+                        "?httpMethod=POST&bridgeEndpoint=true")
+                .log("Medewerker ${header.medewerkerId} vrijgegeven");
 
         from("direct:aanmakenPlanning").routeId("aanmakenPlanning")
                 .saga()
@@ -84,7 +86,7 @@ public class SagaRouter extends RouteBuilder {
                     .option("id", header("id"))
                     .compensation("direct:annulerenPlanning")
                 .choice()
-                    .when(x -> Math.random() >= 0.75)
+                    .when(x -> Math.random() >= 0.85)
                         .throwException(new RuntimeException("Aanmaken planning gefaald"))
                     .otherwise()
                         .log("Planning ${header.id} aangemaakt")

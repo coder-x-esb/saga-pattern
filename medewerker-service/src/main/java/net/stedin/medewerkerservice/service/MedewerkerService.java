@@ -7,15 +7,9 @@ import net.stedin.medewerkerservice.exceptions.MedewerkerNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.PATCH;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -82,6 +76,32 @@ public class MedewerkerService {
             if (medewerkerUpdate.getGeboorteDatum() != null) storedMedewerker.setGeboorteDatum(medewerkerUpdate.getGeboorteDatum());
             medewerkers.set(medewerkers.indexOf(storedMedewerker), medewerkerUpdate);
             log.debug("Medewerker(id={}) updated:\n" + storedMedewerker);
+        } else {
+            throw new MedewerkerIsNotAvailableException();
+        }
+    }
+
+    @POST
+    @Path("/{id}/reserveer")
+    public void reserveer(@PathParam("id") Long id, @QueryParam("datum") String reserveringsDatum) {
+        double i = ThreadLocalRandom.current().nextDouble();
+        if (i >= 0.15) {
+            Medewerker storedMedewerker = find(id);
+            storedMedewerker.setGereserveerdOp(LocalDate.parse(reserveringsDatum, DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            log.debug("Medewerker(id={}) gereserveerd:\n" + storedMedewerker);
+        } else {
+            throw new MedewerkerIsNotAvailableException();
+        }
+    }
+
+    @POST
+    @Path("/{id}/vrijgeven")
+    public void vrijgeven(@PathParam("id") Long id) {
+        double i = ThreadLocalRandom.current().nextDouble();
+        if (i >= 0.15) {
+            Medewerker storedMedewerker = find(id);
+            storedMedewerker.setGereserveerdOp(null);
+            log.debug("Medewerker(id={}) vrijgegeven:\n" + storedMedewerker);
         } else {
             throw new MedewerkerIsNotAvailableException();
         }
