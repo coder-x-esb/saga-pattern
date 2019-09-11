@@ -50,7 +50,7 @@ public class MedewerkerService {
     }
 
     @GET
-    @Path("/{functie}")
+    @Path("/functie/{functie}")
     public List<Medewerker> findByFunctie(@PathParam("functie") Functie functie) {
         return medewerkers.stream()
             .filter(m -> m.getFunctie().equals(functie))
