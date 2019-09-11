@@ -13,5 +13,5 @@ public interface MedewerkerClient {
 
     @GET
     @Path("/{id}")
-    public JsonNode find(@PathParam("id") Long id);
+    JsonNode find(@PathParam("id") Long id);
 }

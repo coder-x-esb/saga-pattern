@@ -68,7 +68,7 @@ public class PlanningService {
     @DELETE
     @Path("/{id}")
     public void delete(@PathParam("id") Long id) {
-        boolean deleted = planningen.removeIf(m -> m.getId().equals(id));
+        boolean deleted = planningen.removeIf(p -> p.getId().equals(id));
 
         if (deleted) {
             log.debug("Planning(id={}) deleted", id);
