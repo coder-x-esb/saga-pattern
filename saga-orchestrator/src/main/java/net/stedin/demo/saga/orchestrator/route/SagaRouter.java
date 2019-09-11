@@ -1,20 +1,30 @@
 package net.stedin.demo.saga.orchestrator.route;
 
+import net.stedin.demo.saga.orchestrator.route.domain.Planning;
 import net.stedin.demo.saga.orchestrator.route.domain.SaveAndPlanWerkorder;
+import net.stedin.demo.saga.orchestrator.route.domain.Werkorder;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.SagaPropagation;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Component
 public class SagaRouter extends RouteBuilder {
 
+    static Map<String, Long> werkorders = new HashMap<>();
+    static Map<String, Long> planningen = new HashMap<>();
+
     @Override
     public void configure() {
         //@formatter:off
+        onException(Exception.class)
+            .maximumRedeliveries(0);
+
         rest().post("/aanmakenEnPlannenWerkorder").route()
             .routeId("aanmakenEnPlannenWerkorderHttp")
             .onException(RuntimeException.class)
@@ -31,11 +41,6 @@ public class SagaRouter extends RouteBuilder {
                 .setHeader("medewerkerId", simple("${body.medewerkerId}"))
                 .process(e -> e.getIn().setHeader("id", UUID.randomUUID().toString()))
                 .log("Uitvoeren saga ${header.id}")
-                /*.process(e -> e.getIn().setBody(SaveAndPlanWerkorder.builder()
-                        .medewerkerId(1L)
-                        .datum(LocalDate.now())
-                        .werkorder(Werkorder.builder()
-                                .omschrijving("Mijn omschrijving").build()).build()))*/
                 .setProperty("Request", body())
                 .saga()
                     .completion("direct:complete")
@@ -53,15 +58,20 @@ public class SagaRouter extends RouteBuilder {
                     .propagation(SagaPropagation.MANDATORY)
                     .option("id", header("id"))
                     .compensation("direct:annuleerWerkorder")
-                .choice()
-                    .when(x -> Math.random() >= 0.85)
-                        .throwException(new RuntimeException("Aanmaken werkorder gefaald"))
-                    .otherwise()
-                        .log("Werkorder ${header.id} aangemaakt")
-                        .setBody(constant("{\"id\":1,\"omschrijving\":\"Mijn werkorder\"}"))
-                        /*.to("http4://localhost:9080/werkorders")*/;
+                .transform(method(Transformations.class, "transformToWerkorder"))
+                .marshal().json(JsonLibrary.Jackson)
+                .toD("http4://localhost:9080/werkorders?httpMethod=POST&bridgeEndpoint=true")
+                .unmarshal().json(JsonLibrary.Jackson, Werkorder.class)
+                .process(e -> werkorders.put(e.getIn().getHeader("id",
+                        String.class), e.getIn().getBody(Werkorder.class).getId()))
+                .log("Werkorder ${body.id} aangemaakt");
         from("direct:annuleerWerkorder").routeId("annulerenWerkorder")
-                .log("Werkorder ${header.id} geannuleerd");
+                .saga()
+                    .option("id", header("id"))
+                .process(e -> e.getIn().setHeader("werkorderId", werkorders.get(e.getIn().getHeader("id", String.class))))
+                .filter(header("werkorderId").isNotNull())
+                .toD("http4://localhost:9080/werkorders/${header.werkorderId}?httpMethod=DELETE&bridgeEndpoint=true")
+                .log("Werkorder ${header.werkorderId} verwijderd");
 
         from("direct:reserveerMedewerker").routeId("reserveerMedewerker")
                 .saga()
@@ -85,15 +95,16 @@ public class SagaRouter extends RouteBuilder {
                     .propagation(SagaPropagation.MANDATORY)
                     .option("id", header("id"))
                     .compensation("direct:annulerenPlanning")
-                .choice()
-                    .when(x -> Math.random() >= 0.85)
-                        .throwException(new RuntimeException("Aanmaken planning gefaald"))
-                    .otherwise()
-                        .log("Planning ${header.id} aangemaakt")
-                        .setBody(constant("{\"medewerkerId\":1,\"datum\":\"2019-09-10\",\"werkorderId\":\"1\"}"))
-                        /*.to("http4://localhost:9082/planningen")*/;
+                .marshal().json(JsonLibrary.Jackson)
+                .toD("http4://localhost:9082/planningen?httpMethod=POST&bridgeEndpoint=true")
+                .unmarshal().json(JsonLibrary.Jackson, Planning.class)
+                .process(e -> planningen.put(e.getIn().getHeader("id",
+                        String.class), e.getIn().getBody(Planning.class).getId()))
+                .log("Planning ${body.id} aangemaakt");
         from("direct:annulerenPlanning").routeId("annulerenPlanning")
-                .log("Planning ${header.id} geannuleerd");
+                .process(e -> e.getIn().setHeader("planningId", planningen.get(e.getIn().getHeader("id", String.class))))
+                .filter(header("planningId").isNotNull())
+                .log("Planning ${header.planningId} geannuleerd");
         //@formatter:on
     }
 }

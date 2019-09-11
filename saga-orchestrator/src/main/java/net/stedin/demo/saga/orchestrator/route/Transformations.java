@@ -1,10 +1,7 @@
 package net.stedin.demo.saga.orchestrator.route;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.stedin.demo.saga.orchestrator.route.domain.Medewerker;
-import net.stedin.demo.saga.orchestrator.route.domain.PlanWerkorder;
-import net.stedin.demo.saga.orchestrator.route.domain.SaveAndPlanWerkorder;
-import net.stedin.demo.saga.orchestrator.route.domain.Werkorder;
+import net.stedin.demo.saga.orchestrator.route.domain.*;
 import org.apache.camel.ExchangeProperty;
 import org.apache.camel.Header;
 
@@ -16,12 +13,11 @@ public class Transformations {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    public PlanWerkorder transformToPlanWerkorder(@ExchangeProperty("Werkorder") String werkorderString, SaveAndPlanWerkorder saveAndPlanWerkorder) throws IOException {
-        Werkorder werkorder = objectMapper.readValue(werkorderString, Werkorder.class);
-        return PlanWerkorder.builder()
+    public Planning transformToPlanWerkorder(@ExchangeProperty("Werkorder") Werkorder werkorder, SaveAndPlanWerkorder saveAndPlanWerkorder) {
+        return Planning.builder()
             .medewerkerId(saveAndPlanWerkorder.getMedewerkerId())
             .werkorderId(werkorder.getId())
-            .datum(saveAndPlanWerkorder.getDatum()).build();
+            .planningsDatum(saveAndPlanWerkorder.getDatum()).build();
     }
 
     public Medewerker transformToMedewerkerReservering(SaveAndPlanWerkorder saveAndPlanWerkorder) {
@@ -34,6 +30,26 @@ public class Transformations {
         return Medewerker.builder()
             .id(medewerkerId)
             .gereserveerdOp(null).build();
+    }
+
+    public Werkorder transformToWerkorder(SaveAndPlanWerkorder saveAndPlanWerkorder) {
+        return Werkorder.builder()
+                .omschrijving(saveAndPlanWerkorder.getWerkorder().omschrijving)
+                .aangemaaktDoor("Henk")
+                .aanmaakDatum(LocalDate.now())
+                .status(WerkorderStatus.ACTIEF)
+                .klantId(1L)
+                .monteurId(saveAndPlanWerkorder.getMedewerkerId()).build();
+    }
+
+    public Werkorder transformToWerkorderAnnuleren(SaveAndPlanWerkorder saveAndPlanWerkorder) {
+        return Werkorder.builder()
+                .omschrijving(saveAndPlanWerkorder.getWerkorder().omschrijving)
+                .aangemaaktDoor("Henk")
+                .aanmaakDatum(LocalDate.now())
+                .status(WerkorderStatus.GEANNULEERD)
+                .klantId(1L)
+                .monteurId(saveAndPlanWerkorder.getMedewerkerId()).build();
     }
 
     public String transformDate(LocalDate date) {
