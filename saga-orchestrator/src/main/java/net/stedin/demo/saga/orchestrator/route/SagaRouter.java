@@ -53,13 +53,8 @@ public class SagaRouter extends RouteBuilder {
                     .propagation(SagaPropagation.MANDATORY)
                     .option("id", header("id"))
                     .compensation("direct:annuleerWerkorder")
-                .choice()
-                    .when(x -> Math.random() >= 0.75)
-                        .throwException(new RuntimeException("Aanmaken werkorder gefaald"))
-                    .otherwise()
-                        .log("Werkorder ${header.id} aangemaakt")
-                        .setBody(constant("{\"id\":1,\"omschrijving\":\"Mijn werkorder\"}"))
-                        /*.to("http4://localhost:9080/werkorders")*/;
+                        .to("http4://localhost:9080/werkorders");
+
         from("direct:annuleerWerkorder").routeId("annulerenWerkorder")
                 .log("Werkorder ${header.id} geannuleerd");
 
