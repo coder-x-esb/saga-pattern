@@ -48,7 +48,7 @@ public class PlanningService {
     }
 
     @POST
-    public void save(Planning planning) {
+    public Planning save(Planning planning) {
         double i = ThreadLocalRandom.current().nextDouble();
         if (i >= 0.15) {
             String functie = this.medewerkerClient.find(planning.getMedewerkerId()).get("functie").asText();
@@ -57,6 +57,7 @@ public class PlanningService {
                 planning.setId(id);
                 planningen.add(planning);
                 this.log.debug("new planning added:\n" + planning);
+                return planning;
             } else {
                 throw new PlanningException("Medewerker is geen monteur");
             }
@@ -68,7 +69,7 @@ public class PlanningService {
     @DELETE
     @Path("/{id}")
     public void delete(@PathParam("id") Long id) {
-        boolean deleted = planningen.removeIf(m -> m.getId().equals(id));
+        boolean deleted = planningen.removeIf(p -> p.getId().equals(id));
 
         if (deleted) {
             log.debug("Planning(id={}) deleted", id);

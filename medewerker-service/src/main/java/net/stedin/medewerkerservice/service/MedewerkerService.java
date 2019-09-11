@@ -58,11 +58,12 @@ public class MedewerkerService {
     }
 
     @POST
-    public void save(Medewerker medewerker) {
+    public Medewerker save(Medewerker medewerker) {
         Long id = (long) medewerkers.size() + 1;
         medewerker.setId(id);
         medewerkers.add(medewerker);
-        this.log.debug("new medewerker added:\n" + medewerker);
+        log.debug("new medewerker added:\n" + medewerker);
+        return medewerker;
     }
 
     @PATCH
@@ -71,9 +72,13 @@ public class MedewerkerService {
         double i = ThreadLocalRandom.current().nextDouble();
         if (i >= 0.15) {
             Medewerker storedMedewerker = find(id);
-            if (medewerkerUpdate.getFunctie() != null) storedMedewerker.setFunctie(medewerkerUpdate.getFunctie());
+            if (medewerkerUpdate.getFunctie() != null) {
+                storedMedewerker.setFunctie(medewerkerUpdate.getFunctie());
+            }
             storedMedewerker.setGereserveerdOp(medewerkerUpdate.getGereserveerdOp());
-            if (medewerkerUpdate.getGeboorteDatum() != null) storedMedewerker.setGeboorteDatum(medewerkerUpdate.getGeboorteDatum());
+            if (medewerkerUpdate.getGeboorteDatum() != null) {
+                storedMedewerker.setGeboorteDatum(medewerkerUpdate.getGeboorteDatum());
+            }
             medewerkers.set(medewerkers.indexOf(storedMedewerker), medewerkerUpdate);
             log.debug("Medewerker(id={}) updated:\n" + storedMedewerker);
         } else {
