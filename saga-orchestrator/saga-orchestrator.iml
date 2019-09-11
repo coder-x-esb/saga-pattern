@@ -12,6 +12,13 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: org.apache.camel:camel-http4-starter:2.24.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.camel:camel-http4:2.24.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.camel:camel-jackson:2.24.1" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.8" level="project" />
+    <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.18.8" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: javax.xml.bind:jaxb-api:2.3.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: javax.activation:javax.activation-api:1.2.0" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-web:2.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:2.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:2.1.4.RELEASE" level="project" />
@@ -59,24 +66,38 @@
     <orderEntry type="library" name="Maven: org.apache.camel:camel-core-starter:2.24.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.camel:camel-stream-starter:2.24.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.camel:camel-stream:2.24.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.camel:camel-http4-starter:2.24.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.camel:camel-http4:2.24.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.camel:camel-http-common:2.24.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.8" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.11" level="project" />
-    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.11" level="project" />
     <orderEntry type="library" name="Maven: org.apache.camel:camel-servlet-starter:2.24.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.camel:camel-servlet:2.24.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.camel:camel-http-common:2.24.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.camel:camel-jackson:2.24.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.camel:camel-core:2.24.1" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.26" level="project" />
-    <orderEntry type="library" name="Maven: com.sun.xml.bind:jaxb-core:2.3.0" level="project" />
-    <orderEntry type="library" name="Maven: com.sun.xml.bind:jaxb-impl:2.3.0" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.8" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.0" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.9.8" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.8" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.xml.bind:jaxb-core:2.3.0" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.xml.bind:jaxb-impl:2.3.0" level="project" />
     <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.18.8" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.camel:camel-opentracing-starter:2.24.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.camel:camel-opentracing:2.24.1" level="project" />
+    <orderEntry type="library" name="Maven: io.jaegertracing:jaeger-client:0.32.0" level="project" />
+    <orderEntry type="library" name="Maven: io.jaegertracing:jaeger-thrift:0.32.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.thrift:libthrift:0.11.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.8" level="project" />
+    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.11" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.11" level="project" />
+    <orderEntry type="library" name="Maven: com.squareup.okhttp3:okhttp:3.9.0" level="project" />
+    <orderEntry type="library" name="Maven: com.squareup.okio:okio:1.13.0" level="project" />
+    <orderEntry type="library" name="Maven: io.jaegertracing:jaeger-core:0.32.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.5" level="project" />
+    <orderEntry type="library" name="Maven: io.jaegertracing:jaeger-tracerresolver:0.32.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: io.opentracing.contrib:opentracing-agent:0.4.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.byteman:byteman:4.0.4" level="project" />
+    <orderEntry type="library" name="Maven: io.opentracing:opentracing-api:0.31.0" level="project" />
+    <orderEntry type="library" name="Maven: io.opentracing:opentracing-util:0.31.0" level="project" />
+    <orderEntry type="library" name="Maven: io.opentracing:opentracing-noop:0.31.0" level="project" />
+    <orderEntry type="library" name="Maven: io.opentracing.contrib:opentracing-tracerresolver:0.1.5" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-starter-test:2.1.4.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test:2.1.4.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test-autoconfigure:2.1.4.RELEASE" level="project" />
@@ -98,8 +119,6 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-jcl:5.1.6.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework:spring-test:5.1.6.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.xmlunit:xmlunit-core:2.6.2" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: javax.xml.bind:jaxb-api:2.3.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: javax.activation:javax.activation-api:1.2.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.camel:camel-test-spring:2.24.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.camel:camel-test:2.24.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.camel:camel-spring:2.24.1" level="project" />

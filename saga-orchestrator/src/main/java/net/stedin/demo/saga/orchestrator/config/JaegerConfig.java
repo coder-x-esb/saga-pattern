@@ -1,4 +1,4 @@
-package net.stedin.demo.saga.orchestrator;
+package net.stedin.demo.saga.orchestrator.config;
 
 import io.jaegertracing.Configuration;
 import io.jaegertracing.Configuration.ReporterConfiguration;

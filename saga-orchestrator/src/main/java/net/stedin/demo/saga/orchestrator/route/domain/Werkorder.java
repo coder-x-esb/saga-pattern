@@ -1,4 +1,4 @@
-package net.stedin.demo.saga.orchestrator.domain;
+package net.stedin.demo.saga.orchestrator.route.domain;
 
 import lombok.*;
 

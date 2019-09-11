@@ -1,9 +1,9 @@
-package net.stedin.demo.saga.orchestrator.transformations;
+package net.stedin.demo.saga.orchestrator.route;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.stedin.demo.saga.orchestrator.domain.PlanWerkorder;
-import net.stedin.demo.saga.orchestrator.domain.SaveAndPlanWerkorder;
-import net.stedin.demo.saga.orchestrator.domain.Werkorder;
+import net.stedin.demo.saga.orchestrator.route.domain.PlanWerkorder;
+import net.stedin.demo.saga.orchestrator.route.domain.SaveAndPlanWerkorder;
+import net.stedin.demo.saga.orchestrator.route.domain.Werkorder;
 import org.apache.camel.ExchangeProperty;
 
 import java.io.IOException;
@@ -15,8 +15,8 @@ public class Transformations {
     public PlanWerkorder transformToPlanWerkorder(@ExchangeProperty("Werkorder") String werkorderString, SaveAndPlanWerkorder saveAndPlanWerkorder) throws IOException {
         Werkorder werkorder = objectMapper.readValue(werkorderString, Werkorder.class);
         return PlanWerkorder.builder()
-                .medewerkerId(saveAndPlanWerkorder.getMedewerkerId())
-                .werkorderId(werkorder.getId())
-                .datum(saveAndPlanWerkorder.getDatum()).build();
+            .medewerkerId(saveAndPlanWerkorder.getMedewerkerId())
+            .werkorderId(werkorder.getId())
+            .datum(saveAndPlanWerkorder.getDatum()).build();
     }
 }

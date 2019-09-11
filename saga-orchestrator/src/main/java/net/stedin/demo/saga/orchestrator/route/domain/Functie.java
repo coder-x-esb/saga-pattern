@@ -1,4 +1,4 @@
-package net.stedin.demo.saga.orchestrator.domain;
+package net.stedin.demo.saga.orchestrator.route.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
@@ -7,7 +7,7 @@ import java.util.Arrays;
 public enum Functie {
     MEDEWERKER,
     MONTEUR;
-    
+
     @JsonCreator
     public static Functie fromString(String value) {
         return Arrays.stream(Functie.values())

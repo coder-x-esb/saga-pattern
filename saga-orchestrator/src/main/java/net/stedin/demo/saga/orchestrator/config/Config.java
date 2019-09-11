@@ -1,4 +1,4 @@
-package net.stedin.demo.saga.orchestrator;
+package net.stedin.demo.saga.orchestrator.config;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.spring.boot.CamelContextConfiguration;

@@ -1,4 +1,4 @@
-package net.stedin.demo.saga.orchestrator;
+package net.stedin.demo.saga.orchestrator.route;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.processor.aggregate.AggregationStrategy;

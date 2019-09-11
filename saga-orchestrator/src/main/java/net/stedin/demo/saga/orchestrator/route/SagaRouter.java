@@ -1,7 +1,6 @@
-package net.stedin.demo.saga.orchestrator;
+package net.stedin.demo.saga.orchestrator.route;
 
-import net.stedin.demo.saga.orchestrator.domain.SaveAndPlanWerkorder;
-import net.stedin.demo.saga.orchestrator.transformations.Transformations;
+import net.stedin.demo.saga.orchestrator.route.domain.SaveAndPlanWerkorder;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.SagaPropagation;
@@ -15,7 +14,7 @@ public class SagaRouter extends RouteBuilder {
 
     @Override
     public void configure() {
-
+        //@formatter:off
         rest().post("/aanmakenEnPlannenWerkorder").route()
             .routeId("aanmakenEnPlannenWerkorderHttp")
             .onException(RuntimeException.class)
@@ -93,5 +92,6 @@ public class SagaRouter extends RouteBuilder {
                         /*.to("http4://localhost:9082/planningen")*/;
         from("direct:annulerenPlanning").routeId("annulerenPlanning")
                 .log("Planning ${header.id} geannuleerd");
+        //@formatter:on
     }
 }
