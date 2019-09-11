@@ -75,11 +75,11 @@ public class MedewerkerService {
     @Path("/{id}")
     public void update(@PathParam("id") Long id, Medewerker medewerkerUpdate) {
         double i = ThreadLocalRandom.current().nextDouble();
-        if (i >= 0.4) {
+        if (i >= 0.15) {
             Medewerker storedMedewerker = find(id);
-            storedMedewerker.setFunctie(medewerkerUpdate.getFunctie());
+            if (medewerkerUpdate.getFunctie() != null) storedMedewerker.setFunctie(medewerkerUpdate.getFunctie());
             storedMedewerker.setGereserveerdOp(medewerkerUpdate.getGereserveerdOp());
-            storedMedewerker.setGeboorteDatum(medewerkerUpdate.getGeboorteDatum());
+            if (medewerkerUpdate.getGeboorteDatum() != null) storedMedewerker.setGeboorteDatum(medewerkerUpdate.getGeboorteDatum());
             medewerkers.set(medewerkers.indexOf(storedMedewerker), medewerkerUpdate);
             log.debug("Medewerker(id={}) updated:\n" + storedMedewerker);
         } else {
