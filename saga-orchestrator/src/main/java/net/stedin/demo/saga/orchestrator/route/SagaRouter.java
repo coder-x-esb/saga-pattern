@@ -7,6 +7,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.SagaPropagation;
 import org.apache.camel.model.dataformat.JsonLibrary;
+import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -25,11 +26,21 @@ public class SagaRouter extends RouteBuilder {
         onException(Exception.class)
             .maximumRedeliveries(0);
 
-        rest().post("/aanmakenEnPlannenWerkorder").route()
+        restConfiguration().bindingMode(RestBindingMode.json)
+            .dataFormatProperty("prettyPrint", "true")
+            .contextPath("/camel")
+            .apiContextPath("/swagger")
+                .apiProperty("api.title", "Werkorder aanmaken en plannen API")
+                .apiProperty("api.version", "1.0")
+                .apiProperty("api.description", "Maakt werkorder aan en plant deze voor medewerker in op de aangegeven datum")
+                .apiProperty("api.contact.name", "Serkan en Alvin");
+
+        rest().post("/aanmakenEnPlannenWerkorder")
+                .type(SaveAndPlanWerkorder.class).outType(Planning.class).apiDocs(true).route()
             .routeId("aanmakenEnPlannenWerkorderHttp")
-            .onException(RuntimeException.class)
+            .onException(Exception.class)
                 .handled(true)
-                .setBody(simple("Aanmaken en plannen van werkorder ${header.id} mislukt"))
+                .setBody(simple("{\"error\": \"Aanmaken en/of plannen van werkorder mislukt\"}"))
                 .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(500))
                 .end()
             .to("direct:aanmakenEnPlannenWerkorder");
@@ -37,21 +48,16 @@ public class SagaRouter extends RouteBuilder {
             from("direct:aanmakenEnPlannenWerkorder")
                 .routeId("aanmakenEnPlannenWerkorder")
                 .errorHandler(noErrorHandler())
-                .unmarshal().json(JsonLibrary.Jackson, SaveAndPlanWerkorder.class)
                 .setHeader("medewerkerId", simple("${body.medewerkerId}"))
                 .process(e -> e.getIn().setHeader("id", UUID.randomUUID().toString()))
                 .log("Uitvoeren saga ${header.id}")
                 .setProperty("Request", body())
                 .saga()
-                    .completion("direct:complete")
                 .multicast(new MulticastPropertyAggregator("Werkorder", "Medewerker"))
                     .to("direct:aanmakenWerkorder", "direct:reserveerMedewerker")
                     .end()
                 .transform(method(Transformations.class, "transformToPlanWerkorder"))
                 .to("direct:aanmakenPlanning");
-
-        from("direct:complete")
-                 .log("Saga voltooid");
 
         from("direct:aanmakenWerkorder").routeId("aanmakenWerkorder")
                 .saga()
@@ -91,6 +97,7 @@ public class SagaRouter extends RouteBuilder {
                 .log("Medewerker ${header.medewerkerId} vrijgegeven");
 
         from("direct:aanmakenPlanning").routeId("aanmakenPlanning")
+                .errorHandler(noErrorHandler())
                 .saga()
                     .propagation(SagaPropagation.MANDATORY)
                     .option("id", header("id"))

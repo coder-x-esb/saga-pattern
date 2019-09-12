@@ -11,10 +11,10 @@ import org.springframework.context.annotation.Bean;
 @org.springframework.context.annotation.Configuration
 public class JaegerConfig {
 
-    @Value("camel.springboot.name")
+    @Value("${camel.springboot.name}")
     private String appName;
 
-    @Value("opentracing.jaeger.http-sender.url")
+    @Value("${opentracing.jaeger.http-sender.url}")
     private String jeagerUrl;
 
     @Bean
